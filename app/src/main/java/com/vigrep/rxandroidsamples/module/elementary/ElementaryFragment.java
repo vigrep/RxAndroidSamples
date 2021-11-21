@@ -15,6 +15,12 @@ import com.vigrep.rxandroidsamples.adapter.ImageAdapter;
 import com.vigrep.rxandroidsamples.databinding.FragmentElementaryBinding;
 import com.vigrep.rxandroidsamples.model.ImageItem;
 import com.vigrep.rxandroidsamples.network.Network;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,6 +59,7 @@ public class ElementaryFragment extends Fragment implements RadioGroup.OnChecked
 
     private void search(String key) {
         mBinding.swipeRefreshLayout.setRefreshing(true);
+/*
         Network.getZhuangbiApi().getImageList(key).enqueue(new Callback<List<ImageItem>>() {
             @Override
             public void onResponse(Call<List<ImageItem>> call, Response<List<ImageItem>> response) {
@@ -67,5 +74,32 @@ public class ElementaryFragment extends Fragment implements RadioGroup.OnChecked
                 mBinding.swipeRefreshLayout.setRefreshing(false);
             }
         });
+*/
+        Network.getZhuangbiApi().getImageListV2(key)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<ImageItem>>() {
+                    @Override
+                    public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
+                        Log.d(TAG, "onSubscribe");
+                    }
+
+                    @Override
+                    public void onNext(@io.reactivex.annotations.NonNull List<ImageItem> imageItems) {
+                        mBinding.swipeRefreshLayout.setRefreshing(false);
+                        Log.d(TAG, "succV2: " + imageItems);
+                        mAdapter.setItems(imageItems);
+                    }
+
+                    @Override
+                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                        Log.d(TAG, "onError: " + e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onComplete");
+                    }
+                });
     }
 }
