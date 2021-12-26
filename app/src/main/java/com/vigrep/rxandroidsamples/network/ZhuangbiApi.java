@@ -14,5 +14,5 @@ public interface ZhuangbiApi {
     Call<List<ImageItem>> getImageList(@Query("q") String query);
 
     @GET("search")
-    Observable<List<ImageItem>> getImageListV2(@Query("q") String query);
+    Observable<List<ImageItem>> getImageListV2(@Query("q") String query, @Query("mini") String mini);
 }

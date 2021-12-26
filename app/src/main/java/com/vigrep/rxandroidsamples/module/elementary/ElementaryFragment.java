@@ -75,7 +75,7 @@ public class ElementaryFragment extends Fragment implements RadioGroup.OnChecked
             }
         });
 */
-        Network.getZhuangbiApi().getImageListV2(key)
+        Network.getZhuangbiApi().getImageListV2(key, "1")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<ImageItem>>() {

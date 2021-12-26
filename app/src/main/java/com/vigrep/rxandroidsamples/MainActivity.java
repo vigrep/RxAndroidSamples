@@ -9,11 +9,12 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.vigrep.rxandroidsamples.databinding.ActivityMainBinding;
 import com.vigrep.rxandroidsamples.module.elementary.ElementaryFragment;
+import com.vigrep.rxandroidsamples.module.map.MapFragment;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding mBinding;
-    private static final String[] PAGES = {"基础"};
+    private static final String[] PAGES = {"基础", "转换(map)"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,12 @@ public class MainActivity extends AppCompatActivity {
             @NonNull
             @Override
             public Fragment createFragment(int position) {
+                switch (position) {
+                    case 0:
+                        return new ElementaryFragment();
+                    case 1:
+                        return new MapFragment();
+                }
                 return new ElementaryFragment();
             }
 
@@ -40,13 +47,7 @@ public class MainActivity extends AppCompatActivity {
         new TabLayoutMediator(mBinding.tabLayout, mBinding.viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                switch (position) {
-                    case 0:
-                        tab.setText(PAGES[position]);
-                        break;
-                    default:
-                        break;
-                }
+                tab.setText(PAGES[position]);
             }
         }).attach();
     }
